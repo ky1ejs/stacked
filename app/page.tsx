@@ -1,19 +1,5 @@
 import { SignInButton, UserButton } from "@clerk/nextjs";
 
-const Input = () => (
-  <div className="min-w-[150px]">
-    <input className="border m-1 rounded"></input>
-  </div>
-)
-
-export const LoginButton = () => {
-  return (
-    <a className="button__login" href="/api/auth/login">
-      Log In
-    </a>
-  );
-};
-
 type ApiProvider = {
   name: string;
   color: string;
