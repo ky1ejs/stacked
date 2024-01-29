@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+enum IntegrationProviderId {
+  SPOTIFY
+  STRAVA
+}
+
+model UserIntegration {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @default(now()) @updatedAt
+  integrationProvider IntegrationProviderId
+  accessToken         String
+  refreshToken        String
+  User                User                  @relation(fields: [userId], references: [id])
+  userId              String                @db.Uuid
+
+  @@unique(name: "integration_user_unique", [integrationProvider, userId])
+}
+
+model User {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clerkId         String            @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @default(now()) @updatedAt
+  UserIntegration UserIntegration[]
+}
