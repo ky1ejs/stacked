@@ -1,7 +1,5 @@
-import { IntegrationProviderId } from "@prisma/client";
-import IntegrationProvider from "./IntegrationProvider";
-import SpotifyProvider from "./spotify";
-import StravaProvider from "./strava";
+import SpotifyProvider from "@/integration/spotify/spotify";
+import StravaProvider from "@/integration/strava";
 
 const PROVIDERS = new Map(
   [SpotifyProvider, StravaProvider].map((obj) => [obj.id, obj]),

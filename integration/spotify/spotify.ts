@@ -1,5 +1,5 @@
 import { IntegrationProviderId } from "@prisma/client";
-import IntegrationProvider from "./IntegrationProvider";
+import IntegrationProvider from "../IntegrationProvider";
 import prisma from "@/prisma/db";
 
 const SpotifyProvider: IntegrationProvider = {
@@ -16,8 +16,11 @@ function buildAuthUrl() {
 
   const params = new URLSearchParams();
   params.append("client_id", SpotifyProvider.clientId);
-  params.append("redirect_uri", "http://localhost:3000/api/callback/spotify");
-  params.append("scope", "user-read-private user-read-email");
+  params.append("redirect_uri", "http://localhost:3000/callback/spotify");
+  params.append(
+    "scope",
+    "user-read-private user-read-email user-read-recently-played",
+  );
   params.append("state", state);
   params.append("response_type", "code");
 
@@ -36,10 +39,7 @@ async function handleAuthCallback(request: Request, userId: string) {
   formParams.append("grant_type", "authorization_code");
   formParams.append("code", code);
   formParams.append("client_id", SpotifyProvider.clientId);
-  formParams.append(
-    "redirect_uri",
-    "http://localhost:3000/api/callback/spotify",
-  );
+  formParams.append("redirect_uri", "http://localhost:3000/callback/spotify");
 
   const token = Buffer.from(
     `${SpotifyProvider.clientId}:${SpotifyProvider.clientSecret}`,
@@ -56,6 +56,7 @@ async function handleAuthCallback(request: Request, userId: string) {
   });
 
   const json = await response.json();
+  console.log(`json: ${JSON.stringify(json)}`);
 
   await prisma.userIntegration.upsert({
     where: {
