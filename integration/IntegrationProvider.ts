@@ -38,15 +38,17 @@ class IntegrationProvider {
     this._handleAuthCallback = _handleAuthCallback;
   }
 
-  buildAuthUrl() {
+  buildRedirectUri() {
     const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
     const host = process.env.VERCEL_URL || "localhost:3000";
-    const redirectUri = `${protocol}://${host}/callback/${this.id.toLowerCase()}/bounce`;
+    return `${protocol}://${host}/callback/${this.id.toLowerCase()}/bounce`;
+  }
 
+  buildAuthUrl() {
     const state = (Math.random() + 1).toString(36).substring(7);
     const params = new URLSearchParams();
     params.append("client_id", this.clientId);
-    params.append("redirect_uri", redirectUri);
+    params.append("redirect_uri", buildRedirectUri());
     params.append("scope", this.scope);
     // params.append("approval_prompt", "force");
     params.append("response_type", "code");

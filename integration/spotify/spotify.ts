@@ -8,7 +8,7 @@ const handleAuthCallback: AuthCallbackHandler = async (code, provider) => {
   formParams.append("grant_type", "authorization_code");
   formParams.append("code", code);
   formParams.append("client_id", provider.clientId);
-  formParams.append("redirect_uri", provider.redirectUri);
+  formParams.append("redirect_uri", provider.buildRedirectUri());
 
   const token = Buffer.from(
     `${provider.clientId}:${provider.clientSecret}`,
