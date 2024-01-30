@@ -4,6 +4,7 @@ import { gql } from "graphql-tag";
 const typeDefs = gql`
   type Query {
     recentlyPlayed: RecentlyPlayed
+    recentActivities: [Activity]
   }
 
   type RecentlyPlayed {
@@ -12,6 +13,16 @@ const typeDefs = gql`
     url: String
     imageUrl: String
     artistName: String
+  }
+
+  type Activity {
+    id: String
+    name: String
+    type: String
+    distance: Float
+    startDateLocal: String
+    timezone: String
+    elapsedTime: Float
   }
 `;
 

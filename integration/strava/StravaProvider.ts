@@ -31,7 +31,7 @@ const StravaProvider = new IntegrationProvider(
   "Strava",
   process.env.STRAVA_CLIENT_ID!,
   process.env.STRAVA_CLIENT_SECRET!,
-  "read",
+  "read,activity:read_all",
   "http://www.strava.com/oauth/authorize",
   handleAuthCallback,
 );

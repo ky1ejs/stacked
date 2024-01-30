@@ -1,5 +1,6 @@
+import Spotify from "@/integration/spotify/Spotify";
+import Strava from "@/integration/strava/Stava";
 import prisma from "@/prisma/db";
-import Spotify from "@/integration/spotify";
 
 const resolvers = {
   Query: {
@@ -17,11 +18,32 @@ const resolvers = {
         throw new Error("Integration not found.");
       }
       const spotify = new Spotify({
-        clientId: process.env.SPOTIFY_CLIENT_ID!,
-        secret: process.env.SPOTIFY_CLIENT_SECRET!,
         refreshToken: integration.refreshToken,
+        accessToken: integration.accessToken,
+        secret: process.env.SPOTIFY_CLIENT_SECRET!,
+        clientId: process.env.SPOTIFY_CLIENT_ID!,
       });
       return spotify.fetchRecentlyPlayed();
+    },
+    recentActivities: async (parent: any, args: any, context: any) => {
+      const integration = await prisma.userIntegration.findUnique({
+        where: {
+          integration_user_unique: {
+            userId: context.req.headers.get("account_id"),
+            integrationProvider: "STRAVA",
+          },
+        },
+      });
+      if (!integration) {
+        throw new Error("Integration not found.");
+      }
+      const strava = new Strava({
+        refreshToken: integration.refreshToken,
+        accessToken: integration.accessToken,
+        secret: process.env.STRAVA_CLIENT_SECRET!,
+        clientId: process.env.STRAVA_CLIENT_ID!,
+      });
+      return strava.fetchRecentActivities();
     },
   },
 };

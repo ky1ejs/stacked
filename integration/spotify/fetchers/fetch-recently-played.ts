@@ -1,21 +1,19 @@
 import { Axios } from "axios";
 import RecentlyPlayed from "./model/RecentlyPlayed";
-import SpotifyConfig from "./model/SpotifyConfig";
-import { getAccessToken } from "./token";
+import AuthCreds from "../AuthCreds";
 
 export const fetchRecentlyPlayed = async (
-  http: Axios,
-  config: SpotifyConfig,
+  client: Axios,
+  creds: AuthCreds,
 ): Promise<RecentlyPlayed | undefined> => {
-  const accessToken = await getAccessToken(http, config);
   const url = "https://api.spotify.com/v1/me/player/recently-played";
   const headers = {
-    Authorization: `Bearer ${accessToken}`,
+    Authorization: `Bearer ${creds.accessToken}`,
     "Content-Type": "application/json",
   };
 
   try {
-    const response = await http.get(url, { headers });
+    const response = await client.get(url, { headers });
 
     if (!response.data || response.status !== 200) {
       throw new Error("Non 200 status received when fetching recently played.");

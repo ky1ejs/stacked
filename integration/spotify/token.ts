@@ -1,13 +1,10 @@
 import { Axios } from "axios";
 import qs from "qs";
-import SpotifyConfig from "./model/SpotifyConfig";
+import AuthCreds from "../AuthCreds";
 
 let spotifyAccessToken: string | undefined;
 
-export const refreshAccessToken = async (
-  http: Axios,
-  config: SpotifyConfig,
-) => {
+export const refreshAccessToken = async (http: Axios, config: AuthCreds) => {
   const url = "https://accounts.spotify.com/api/token";
   const auth = Buffer.from(
     `${config.clientId}:${config.secret}`,
@@ -29,10 +26,4 @@ export const refreshAccessToken = async (
   }
   spotifyAccessToken = r.data.access_token;
   return spotifyAccessToken;
-};
-
-export const getAccessToken = async (http: Axios, config: SpotifyConfig) => {
-  return spotifyAccessToken
-    ? spotifyAccessToken
-    : await refreshAccessToken(http, config);
 };

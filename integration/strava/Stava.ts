@@ -1,11 +1,11 @@
 import { Axios } from "axios";
 import createRefreshingClient from "../createRefreshingClient";
 import AuthCreds from "../AuthCreds";
-import { fetchRecentlyPlayed } from "./fetchers/fetch-recently-played";
-import { refreshAccessToken } from "./token";
-import RecentlyPlayed from "./model/RecentlyPlayed";
+import { fetchRecentActivities } from "./fetch-activities";
+import Activity from "./model/Activity";
+import { refreshAccessToken } from "../spotify/token";
 
-class Spotify {
+class Strava {
   private readonly client: Axios;
   private readonly creds: AuthCreds;
 
@@ -14,9 +14,9 @@ class Spotify {
     this.creds = creds;
   }
 
-  async fetchRecentlyPlayed(): Promise<RecentlyPlayed | undefined> {
-    return fetchRecentlyPlayed(this.client, this.creds);
+  async fetchRecentActivities(): Promise<Activity[] | undefined> {
+    return fetchRecentActivities(this.client, this.creds);
   }
 }
 
-export default Spotify;
+export default Strava;
