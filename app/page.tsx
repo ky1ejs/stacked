@@ -34,6 +34,7 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex flex-col text-center">
         <h1 className="mb-6 text-4xl">Stacked</h1>
+        <div>Your id: {userAndIntegrations?.id}</div>
         <div className="border">
           <SignInButton />
           <UserButton afterSignOutUrl="/" />
