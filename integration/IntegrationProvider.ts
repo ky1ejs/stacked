@@ -48,7 +48,7 @@ class IntegrationProvider {
     const state = (Math.random() + 1).toString(36).substring(7);
     const params = new URLSearchParams();
     params.append("client_id", this.clientId);
-    params.append("redirect_uri", buildRedirectUri());
+    params.append("redirect_uri", this.buildRedirectUri());
     params.append("scope", this.scope);
     // params.append("approval_prompt", "force");
     params.append("response_type", "code");
