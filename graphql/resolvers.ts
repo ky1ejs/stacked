@@ -3,6 +3,7 @@ import Spotify from "@/integration/spotify";
 
 const resolvers = {
   Query: {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     recentlyPlayed: async (parent: any, args: any, context: any) => {
       const integration = await prisma.userIntegration.findUnique({
         where: {

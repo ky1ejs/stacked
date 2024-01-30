@@ -8,18 +8,12 @@ const handleAuthCallback: AuthCallbackHandler = async (code, provider) => {
   formParams.append("grant_type", "authorization_code");
   formParams.append("code", code);
   formParams.append("client_id", provider.clientId);
-  formParams.append("redirect_uri", provider.redirectUri);
+  formParams.append("client_secret", provider.clientSecret);
 
-  const token = Buffer.from(
-    `${provider.clientId}:${provider.clientSecret}`,
-    "binary",
-  ).toString("base64");
-
-  const response = await fetch("https://accounts.spotify.com/api/token", {
+  const response = await fetch("https://www.strava.com/oauth/token", {
     method: "POST",
     headers: {
       "content-type": "application/x-www-form-urlencoded",
-      Authorization: "Basic " + token,
     },
     body: formParams.toString(),
   });
@@ -32,15 +26,15 @@ const handleAuthCallback: AuthCallbackHandler = async (code, provider) => {
   };
 };
 
-const SpotifyProvider = new IntegrationProvider(
-  IntegrationProviderId.SPOTIFY,
-  "Spotify",
-  process.env.SPOTIFY_CLIENT_ID!,
-  process.env.SPOTIFY_CLIENT_SECRET!,
-  "http://localhost:3000/callback/spotify/bounce",
-  "user-read-private user-read-email user-read-recently-played",
-  "https://accounts.spotify.com/authorize",
+const StravaProvider = new IntegrationProvider(
+  IntegrationProviderId.STRAVA,
+  "Strava",
+  process.env.STRAVA_CLIENT_ID!,
+  process.env.STRAVA_CLIENT_SECRET!,
+  "http://localhost:3000/callback/strava/bounce",
+  "read",
+  "http://www.strava.com/oauth/authorize",
   handleAuthCallback,
 );
 
-export default SpotifyProvider;
+export default StravaProvider;

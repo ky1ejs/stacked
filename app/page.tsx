@@ -14,7 +14,7 @@ const ApiProviderComponent = ({
   <div className="m-2 border border-black px-12 py-6">
     <h3>{provider.displayName}</h3>
     <div className="m-2 rounded bg-slate-400 px-6 py-1">
-      <a href={provider.authUrlBuilder()}>Link</a>
+      <a href={provider.buildAuthUrl()}>Link</a>
       {integratedIds.includes(provider.id) && <div>✅</div>}
     </div>
   </div>

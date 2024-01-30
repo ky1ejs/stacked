@@ -11,5 +11,5 @@ export default function Page({
     return "Error";
   }
   const query = new URLSearchParams(searchParams);
-  redirect(`/api/callback/${params.provider_id}?${query.toString()}`);
+  redirect(`/callback/${params.provider_id}?${query.toString()}`);
 }
