@@ -37,7 +37,6 @@ const SpotifyProvider = new IntegrationProvider(
   "Spotify",
   process.env.SPOTIFY_CLIENT_ID!,
   process.env.SPOTIFY_CLIENT_SECRET!,
-  "http://localhost:3000/callback/spotify/bounce",
   "user-read-private user-read-email user-read-recently-played",
   "https://accounts.spotify.com/authorize",
   handleAuthCallback,

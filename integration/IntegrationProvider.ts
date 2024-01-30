@@ -16,7 +16,6 @@ class IntegrationProvider {
   displayName: string;
   clientId: string;
   clientSecret: string;
-  redirectUri: string;
   scope: string;
   authUri: string;
   private _handleAuthCallback: AuthCallbackHandler;
@@ -26,7 +25,6 @@ class IntegrationProvider {
     displayName: string,
     clientId: string,
     clientSecret: string,
-    redirectUri: string,
     scope: string,
     authUri: string,
     _handleAuthCallback: AuthCallbackHandler,
@@ -35,18 +33,20 @@ class IntegrationProvider {
     this.displayName = displayName;
     this.clientId = clientId;
     this.clientSecret = clientSecret;
-    this.redirectUri = redirectUri;
     this.scope = scope;
     this.authUri = authUri;
     this._handleAuthCallback = _handleAuthCallback;
   }
 
   buildAuthUrl() {
-    console.log(this.clientId);
+    const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+    const host = process.env.VERCEL_URL || "localhost:3000";
+    const redirectUri = `${protocol}://${host}/callback/${this.id.toLowerCase()}/bounce`;
+
     const state = (Math.random() + 1).toString(36).substring(7);
     const params = new URLSearchParams();
     params.append("client_id", this.clientId);
-    params.append("redirect_uri", this.redirectUri);
+    params.append("redirect_uri", redirectUri);
     params.append("scope", this.scope);
     // params.append("approval_prompt", "force");
     params.append("response_type", "code");
