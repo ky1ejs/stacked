@@ -3,12 +3,16 @@ import IntegrationProvider, {
   AuthCallbackHandler,
 } from "../IntegrationProvider";
 
-const handleAuthCallback: AuthCallbackHandler = async (code, provider) => {
+const handleAuthCallback: AuthCallbackHandler = async (
+  code,
+  provider,
+  host,
+) => {
   const formParams = new URLSearchParams();
   formParams.append("grant_type", "authorization_code");
   formParams.append("code", code);
   formParams.append("client_id", provider.clientId);
-  formParams.append("redirect_uri", provider.buildRedirectUri());
+  formParams.append("redirect_uri", provider.buildRedirectUri(host));
 
   const token = Buffer.from(
     `${provider.clientId}:${provider.clientSecret}`,

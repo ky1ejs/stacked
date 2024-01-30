@@ -3,6 +3,7 @@ import PROVIDERS from "@/integration/providers";
 import prisma from "@/prisma/db";
 import { SignInButton, UserButton, currentUser } from "@clerk/nextjs";
 import { IntegrationProviderId } from "@prisma/client";
+import { headers } from "next/headers";
 
 const ApiProviderComponent = ({
   provider,
@@ -10,15 +11,22 @@ const ApiProviderComponent = ({
 }: {
   provider: IntegrationProvider;
   integratedIds: IntegrationProviderId[];
-}) => (
-  <div className="m-2 border border-black px-12 py-6">
-    <h3>{provider.displayName}</h3>
-    <div className="m-2 rounded bg-slate-400 px-6 py-1">
-      <a href={provider.buildAuthUrl()}>Link</a>
-      {integratedIds.includes(provider.id) && <div>✅</div>}
+}) => {
+  const headersList = headers();
+  const host = headersList.get("host");
+
+  if (!host) throw new Error("No host");
+
+  return (
+    <div className="m-2 border border-black px-12 py-6">
+      <h3>{provider.displayName}</h3>
+      <div className="m-2 rounded bg-slate-400 px-6 py-1">
+        <a href={provider.buildAuthUrl(host)}>Link</a>
+        {integratedIds.includes(provider.id) && <div>✅</div>}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default async function Home() {
   const user = await currentUser();

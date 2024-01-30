@@ -5,6 +5,7 @@ import Tokens from "./tokens";
 export type AuthCallbackHandler = (
   code: string,
   provider: IntegrationProvider,
+  host: string,
 ) => Promise<Tokens>;
 
 class IntegrationProvider {
@@ -34,17 +35,16 @@ class IntegrationProvider {
     this._handleAuthCallback = _handleAuthCallback;
   }
 
-  buildRedirectUri() {
+  buildRedirectUri(host: string) {
     const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-    const host = process.env.VERCEL_URL || "localhost:3000";
     return `${protocol}://${host}/callback/${this.id.toLowerCase()}/bounce`;
   }
 
-  buildAuthUrl() {
+  buildAuthUrl(host: string) {
     const state = (Math.random() + 1).toString(36).substring(7);
     const params = new URLSearchParams();
     params.append("client_id", this.clientId);
-    params.append("redirect_uri", this.buildRedirectUri());
+    params.append("redirect_uri", this.buildRedirectUri(host));
     params.append("scope", this.scope);
     // params.append("approval_prompt", "force");
     params.append("response_type", "code");
@@ -60,7 +60,11 @@ class IntegrationProvider {
     if (!code) {
       throw new Error("Code not provided.");
     }
-    const tokens = await this._handleAuthCallback(code, this);
+    const tokens = await this._handleAuthCallback(
+      code,
+      this,
+      new URL(request.url).host,
+    );
     await prisma.userIntegration.upsert({
       where: {
         integration_user_unique: {
