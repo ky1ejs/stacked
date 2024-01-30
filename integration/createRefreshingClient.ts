@@ -1,11 +1,9 @@
 import axios, { Axios } from "axios";
-import { refreshAccessToken } from "@/integration/spotify/token";
 import AuthCreds from "./AuthCreds";
+import prisma from "@/prisma/db";
+import Tokens from "./tokens";
 
-type TokenRefresher = (
-  client: Axios,
-  creds: AuthCreds,
-) => Promise<string | undefined>;
+type TokenRefresher = (client: Axios, creds: AuthCreds) => Promise<Tokens>;
 
 function createRefreshingClient(
   tokenRefresher: TokenRefresher,
@@ -23,12 +21,21 @@ function createRefreshingClient(
       !error.config.__isRetryRequest
     ) {
       try {
-        const accessToken = await refreshAccessToken(client, creds);
+        const tokens = await tokenRefresher(client, creds);
         error.config.__isRetryRequest = true;
         error.config.headers = {
           ...error.config.headers,
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${tokens.accessToken}`,
         };
+
+        prisma.userIntegration.update({
+          where: { id: creds.integrationId },
+          data: {
+            refreshToken: tokens.refreshToken,
+            accessToken: tokens.accessToken,
+          },
+        });
+
         return client.request(error.config);
       } catch (authError) {
         // refreshing has failed, but report the original error, i.e. 401

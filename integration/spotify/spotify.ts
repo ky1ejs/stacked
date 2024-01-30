@@ -2,7 +2,7 @@ import { Axios } from "axios";
 import createRefreshingClient from "../createRefreshingClient";
 import AuthCreds from "../AuthCreds";
 import { fetchRecentlyPlayed } from "./fetchers/fetch-recently-played";
-import { refreshAccessToken } from "./token";
+import { refreshSpotifyToken } from "./refreshSpotifyToken";
 import RecentlyPlayed from "./model/RecentlyPlayed";
 
 class Spotify {
@@ -10,7 +10,7 @@ class Spotify {
   private readonly creds: AuthCreds;
 
   constructor(creds: AuthCreds) {
-    this.client = createRefreshingClient(refreshAccessToken, creds);
+    this.client = createRefreshingClient(refreshSpotifyToken, creds);
     this.creds = creds;
   }
 

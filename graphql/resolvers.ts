@@ -18,9 +18,10 @@ const resolvers = {
         throw new Error("Integration not found.");
       }
       const spotify = new Spotify({
+        integrationId: integration.id,
         refreshToken: integration.refreshToken,
         accessToken: integration.accessToken,
-        secret: process.env.SPOTIFY_CLIENT_SECRET!,
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
         clientId: process.env.SPOTIFY_CLIENT_ID!,
       });
       return spotify.fetchRecentlyPlayed();
@@ -38,9 +39,10 @@ const resolvers = {
         throw new Error("Integration not found.");
       }
       const strava = new Strava({
+        integrationId: integration.id,
         refreshToken: integration.refreshToken,
         accessToken: integration.accessToken,
-        secret: process.env.STRAVA_CLIENT_SECRET!,
+        clientSecret: process.env.STRAVA_CLIENT_SECRET!,
         clientId: process.env.STRAVA_CLIENT_ID!,
       });
       return strava.fetchRecentActivities();

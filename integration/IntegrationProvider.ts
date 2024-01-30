@@ -1,10 +1,6 @@
 import prisma from "@/prisma/db";
 import { IntegrationProviderId } from "@prisma/client";
-
-type Tokens = {
-  accessToken: string;
-  refreshToken: string;
-};
+import Tokens from "./tokens";
 
 export type AuthCallbackHandler = (
   code: string,

@@ -1,6 +1,7 @@
 export default interface AuthCreds {
+  integrationId: string;
   refreshToken: string;
   accessToken: string;
-  secret: string;
   clientId: string;
+  clientSecret: string;
 }
