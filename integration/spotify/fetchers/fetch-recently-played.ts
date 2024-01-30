@@ -1,6 +1,6 @@
 import { Axios } from "axios";
-import RecentlyPlayed from "./model/RecentlyPlayed";
-import AuthCreds from "../AuthCreds";
+import RecentlyPlayed from "@/integration/spotify/model/RecentlyPlayed";
+import AuthCreds from "@/integration/tokens";
 
 export const fetchRecentlyPlayed = async (
   client: Axios,
